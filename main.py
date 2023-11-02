@@ -2,19 +2,19 @@ import math
 import random
 import time
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 StartMinBalance = 5
 StartMaxBalance = 50
 
 
 #region utility methods
-def wait(len: float):
+def wait(len: float) -> None:
 	if not DEBUG_MODE:
 		time.sleep(len)
 
 
-def loadingAnimation(duration: float):
+def loadingAnimation(duration: float, prefix: str = "") -> None:
 	if DEBUG_MODE:
 		return
 
@@ -66,15 +66,15 @@ def loadingAnimation(duration: float):
 
 			chars[location] = f"{currentColour}■"
 
-		full = ""
+		full = prefix
 		for c in chars:
 			full += str(c)
 
 		print(f"\r\033[K{full}", flush=True, end='')
 		wait(speed)
-	print("\r\033[K", end='')
+	print(f"\r\033[K{reset}", end='')
 
-def prettyPrint(text: str, speed: float = 0.06, enterOnEnd: bool = True):
+def prettyPrint(text: str, speed: float = 0.06, enterOnEnd: bool = True) -> None:
 	for c in text:
 		print(c, end="", flush=True)
 		wait(speed)
@@ -88,7 +88,7 @@ def prettyInput(text: str, speed: float = 0.06) -> str:
 
 
 
-def introMessage():
+def introMessage() -> None:
 	prettyPrint("Welcome Trader!")
 	name: str = prettyInput("What is your name? ") #TODO SANATISE INPUT AGHHGHAHGIAEH
 	greeting = f"Hello {name},"
@@ -98,7 +98,7 @@ def introMessage():
 	wait(0.25)
 	prettyPrint("Good Luck!", 0.07)
 
-def setupStats():
+def setupStats() -> None:
 	prettyPrint("We are going to find out your starting stats.\nThis is up to fate so may the odds be ever in your favour")
 	wait(0.4)
 
@@ -107,15 +107,30 @@ def setupStats():
 	loadingAnimation(3)
 	startingBalance = random.randint(StartMinBalance, StartMaxBalance)
 	prettyPrint(f"You are starting with £{startingBalance}")
+	wait(0.4)
+
+	prettyPrint("Next, ", enterOnEnd=False)
+	prettyPrint("your goods...")
+	wait(0.2)
+	prettyPrint(f"You are starting with:")
+
+	loadingAnimation(2, "\t")
+	goldQuant = random.randint(3, 15)
+	prettyPrint(f"\t- {goldQuant} Gold Pieces")
+
+	loadingAnimation(2, "\t")
+	silverQuant = random.randint(5, 23)
+	prettyPrint(f"\t- {silverQuant} Silver Pieces")
 
 
-def place():
+def place() -> None:
 	pass
 
 
-def main():
+def main() -> None:
 	if not DEBUG_MODE:
 		introMessage()
+	wait(0.5)
 	setupStats()
 	
 
